@@ -1,0 +1,55 @@
+amount,category,created_at,summary
+45.75,Food,2025-01-01 08:15:00,Breakfast and coffee
+120.00,Transportation,2025-01-01 18:45:00,Monthly metro card
+65.40,Groceries,2025-01-02 16:20:00,Supermarket shopping
+15.99,Entertainment,2025-01-02 21:10:00,Streaming subscription
+250.00,Rent,2025-01-03 09:00:00,Partial rent payment
+32.50,Food,2025-01-03 13:05:00,Lunch with coworkers
+89.99,Utilities,2025-01-04 10:30:00,Electricity bill
+54.20,Groceries,2025-01-04 17:45:00,Weekly grocery refill
+22.00,Transportation,2025-01-05 08:10:00,Ride-sharing trip
+140.00,Healthcare,2025-01-05 14:00:00,Doctor consultation
+75.00,Entertainment,2025-01-06 20:00:00,Concert ticket
+18.30,Food,2025-01-06 09:10:00,Coffee and snacks
+310.00,Shopping,2025-01-07 19:40:00,New shoes purchase
+60.00,Utilities,2025-01-07 11:15:00,Internet bill
+42.75,Groceries,2025-01-08 18:25:00,Fresh produce
+27.90,Transportation,2025-01-08 07:50:00,Gas refill
+95.00,Education,2025-01-09 16:00:00,Online course fee
+14.50,Food,2025-01-09 12:30:00,Quick lunch
+180.00,Insurance,2025-01-10 09:00:00,Health insurance premium
+39.99,Entertainment,2025-01-10 21:30:00,Video game purchase
+55.60,Groceries,2025-01-11 17:10:00,Household groceries
+23.00,Transportation,2025-01-11 08:05:00,Taxi fare
+68.25,Food,2025-01-12 19:20:00,Dinner at restaurant
+110.00,Utilities,2025-01-12 10:00:00,Water and gas bill
+45.00,Personal Care,2025-01-13 15:40:00,Haircut
+29.99,Entertainment,2025-01-13 22:00:00,Movie night
+72.80,Groceries,2025-01-14 18:15:00,Weekly grocery run
+19.50,Food,2025-01-14 09:05:00,Breakfast
+260.00,Rent,2025-01-15 09:00:00,Partial rent payment
+90.00,Healthcare,2025-01-15 14:30:00,Prescription medicines
+35.00,Transportation,2025-01-16 08:00:00,Monthly bus pass
+58.40,Groceries,2025-01-16 17:50:00,Groceries and snacks
+12.99,Entertainment,2025-01-17 20:15:00,Music subscription
+47.60,Food,2025-01-17 13:10:00,Lunch meeting
+125.00,Education,2025-01-18 11:00:00,Workshop registration
+80.00,Utilities,2025-01-18 09:30:00,Mobile phone bill
+34.25,Groceries,2025-01-19 16:40:00,Quick grocery trip
+21.00,Transportation,2025-01-19 07:55:00,Train ticket
+66.90,Food,2025-01-20 19:00:00,Dinner delivery
+200.00,Savings,2025-01-20 10:00:00,Monthly savings transfer
+44.10,Groceries,2025-01-21 18:10:00,Grocery restock
+28.75,Food,2025-01-21 12:45:00,Lunch outside
+99.00,Entertainment,2025-01-22 21:00:00,Event ticket
+50.00,Personal Care,2025-01-22 15:30:00,Skincare products
+31.60,Transportation,2025-01-23 08:20:00,Fuel expense
+70.35,Groceries,2025-01-23 17:35:00,Weekly groceries
+16.80,Food,2025-01-24 09:00:00,Breakfast pastry
+150.00,Insurance,2025-01-24 10:15:00,Car insurance payment
+40.00,Entertainment,2025-01-25 20:30:00,Dining and drinks
+57.25,Groceries,2025-01-25 18:05:00,Grocery shopping
+24.00,Transportation,2025-01-26 08:10:00,Ride-sharing fare
+85.00,Healthcare,2025-01-26 13:50:00,Dental checkup
+33.90,Food,2025-01-27 12:20:00,Lunch cafe
+210.00,Shopping,2025-01-27 19:15:00,Clothing purchase
