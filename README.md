@@ -59,8 +59,13 @@ Install the following Python packages:
 
  pip install mcp openai supabase python-dotenv
 
-6.Members of the Group
-
+6.Members of the Group and Email
+name:
 -Vaishnavi Surwase 
 -Sanket Gayakhe 
 - Pratik Kamble
+email:
+vaishnavisurwase95@gmail.com
+gayakhesanket@gmail.com
+
+
