@@ -56,7 +56,8 @@ I spent 150 rupees on groceries
 
 5.Packages Required
 Install the following Python packages:
-       -pip install mcp openai supabase python-dotenv
+
+ pip install mcp openai supabase python-dotenv
 
 6.Members of the Group
 
