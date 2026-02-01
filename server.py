@@ -1,119 +1,79 @@
-import asyncio
-import sys
 import os
-import json
-from pathlib import Path
-from contextlib import AsyncExitStack
-
 from dotenv import load_dotenv
-from mcp import ClientSession, StdioServerParameters
-from mcp.client.stdio import stdio_client
-from openai import AsyncOpenAI
+from supabase import create_client
+from mcp.server.fastmcp import FastMCP
 
 # -----------------------------------
 # Load environment variables
 # -----------------------------------
 load_dotenv()
 
-OPENAI_MODEL = "gpt-3.5-turbo"
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
-class MCPClient:
-    def __init__(self):
-        self.session = None
-        self.exit_stack = AsyncExitStack()
-        self.openai = AsyncOpenAI()
+if not SUPABASE_URL or not SUPABASE_KEY:
+    raise RuntimeError("Supabase credentials not found in .env file")
 
-    async def connect_to_server(self, server_script_path: str):
-        path = Path(server_script_path).resolve()
+supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-        server_params = StdioServerParameters(
-            command=sys.executable,
-            args=["-u", str(path)],   # 🔥 unbuffered for Windows
-            env=os.environ.copy()
-        )
+# -----------------------------------
+# Create MCP Server
+# -----------------------------------
+server = FastMCP("AI-Personal-Finance-Assistant")
 
-        stdio_transport = await self.exit_stack.enter_async_context(
-            stdio_client(server_params)
-        )
+# -----------------------------------
+# MCP TOOLS
+# -----------------------------------
 
-        self.stdio, self.write = stdio_transport
+@server.tool(name="add_expense", description="Add an expense")
+async def add_expense(amount: float, category: str) -> str:
+    supabase.table("expenses").insert({
+        "amount": amount,
+        "category": category
+    }).execute()
 
-        self.session = await self.exit_stack.enter_async_context(
-            ClientSession(self.stdio, self.write)
-        )
+    return f"Expense of ₹{amount} added under '{category}'."
 
-        # ✅ THIS WAS MISSING
-        await self.session.initialize()
-        print("MCP session initialized", flush=True)
-
-    async def process_query(self, query: str) -> str:
-        messages = [{"role": "user", "content": query}]
-        tools = (await self.session.list_tools()).tools
-
-        openai_tools = [
-            {
-                "type": "function",
-                "function": {
-                    "name": t.name,
-                    "description": t.description,
-                    "parameters": t.inputSchema,
-                },
-            }
-            for t in tools
-        ]
-
-        while True:
-            response = await self.openai.chat.completions.create(
-                model=OPENAI_MODEL,
-                messages=messages,
-                tools=openai_tools,
-            )
-
-            message = response.choices[0].message
-
-            if not message.tool_calls:
-                return message.content
-
-            messages.append(message)
-
-            for call in message.tool_calls:
-                args = json.loads(call.function.arguments)
-                result = await self.session.call_tool(
-                    call.function.name, args
-                )
-
-                messages.append({
-                    "role": "tool",
-                    "tool_call_id": call.id,
-                    "content": result.content
-                })
-
-    async def chat_loop(self):
-        while True:
-            query = input("\nQuery (type 'quit' to exit): ").strip()
-            if query.lower() == "quit":
-                break
-
-            reply = await self.process_query(query)
-            print("\n" + reply)
-
-    async def cleanup(self):
-        await self.exit_stack.aclose()
+@server.tool(name="get_total_expense", description="Get total spending")
+async def get_total_expense() -> str:
+    res = supabase.table("expenses").select("amount").execute()
+    total = sum(row["amount"] for row in (res.data or []))
+    return f"Your total spending is ₹{total}"
 
 
-async def main():
-    if len(sys.argv) < 2:
-        print("Usage: python client.py server.py")
-        return
+@server.tool(name="monthly_report", description="Category-wise report")
+async def monthly_report() -> dict:
+    res = supabase.table("expenses").select("*").execute()
+    report = {}
 
-    client = MCPClient()
-    try:
-        await client.connect_to_server(sys.argv[1])
-        print("MCP Client Ready", flush=True)   # ✅ THIS WAS MISSING
-        await client.chat_loop()
-    finally:
-        await client.cleanup()
+    for row in (res.data or []):
+        report[row["category"]] = report.get(row["category"], 0) + row["amount"]
+
+    return report
+
+@server.tool(name="top_category", description="Highest spending category")
+async def top_category() -> str:
+    res = supabase.table("expenses").select("*").execute()
+    summary = {}
+
+    for row in (res.data or []):
+        summary[row["category"]] = summary.get(row["category"], 0) + row["amount"]
+
+    if not summary:
+        return "No expenses found."
+
+    top = max(summary, key=summary.get)
+    return f"Top spending category: {top}"
 
 
+@server.tool(name="delete_expense", description="Delete expense by ID")
+async def delete_expense(expense_id: str) -> str:
+    supabase.table("expenses").delete().eq("id", expense_id).execute()
+    return f"Expense {expense_id} deleted."
+
+
+# -----------------------------------
+# Run MCP Server (STDIO)
+# -----------------------------------
 if __name__ == "__main__":
-    asyncio.run(main())
+    server.run(transport="stdio")
